@@ -4,24 +4,29 @@ import { Calendar } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 
 import { localizer, getMessagesES } from "../../helpers"
-import { useState } from "react"
-import { useUiStore, useCalendarStore } from "../../hooks"
+import { useEffect, useState } from "react"
+import { useUiStore, useCalendarStore, useAuthStore } from "../../hooks"
+import { useSelector } from "react-redux"
 
 
 export const CalendarPage = () => {
 
   const { openDateModal } = useUiStore()
-  const { events, setActiveEvent } = useCalendarStore()
+  const { events, setActiveEvent, startLoadingEvents } = useCalendarStore()
+  const { user } = useAuthStore()
+  const { activeEvent } = useSelector( state => state.calendar )
 
   const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'week' )
 
   const eventStyleGetter = ( event, start, end, isSelected ) => {
 
+    const isMyEvent = ( user.uid === event.user._id ) || ( user.uid === event.user.uid )
+
     const style = {
-      backgroundColor: '#347CF7',
+      backgroundColor:  isMyEvent ? '#347CF7' : '#465660',
       borderRadius: '0px',
       opacity: 0.8,
-      color: 'white'
+      color: 'white',
     }
   
     return {
@@ -42,6 +47,12 @@ export const CalendarPage = () => {
     setLastView(event)
   }
 
+  useEffect(() => {
+    
+    startLoadingEvents()
+  }, [])
+  
+
   return (
     <>
       <NavBar></NavBar>
@@ -53,7 +64,7 @@ export const CalendarPage = () => {
         events={events}
         startAccessor="start"
         endAccessor="end"
-        style={{ height: 'calc(100vh - 80px' }}
+        style={{ height: 'calc(100vh - 80px)' }}
         messages={ getMessagesES() }
         eventPropGetter={ eventStyleGetter }
         components={{
@@ -67,7 +78,13 @@ export const CalendarPage = () => {
       <CalendarModal></CalendarModal>
 
       <FabAddNew></FabAddNew>
-      <FabDelete></FabDelete>
+      {
+        ( activeEvent?.user._id === user.uid )
+        ? <FabDelete></FabDelete>
+        : ''
+
+      }
+      
       
     </>
   )

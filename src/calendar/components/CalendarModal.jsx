@@ -123,7 +123,8 @@ export const CalendarModal = () => {
                     dateFormat='dd/MM/yyyy p'
                     showTimeSelect
                     locale='es'
-                    timeCaption='Hora'>
+                    timeCaption='Hora'
+                    timeIntervals={60}>
                 </DatePicker>
                 </div>
             </div>
@@ -139,7 +140,8 @@ export const CalendarModal = () => {
                     dateFormat='dd/MM/yyyy p'
                     showTimeSelect
                     locale='es'
-                    timeCaption='Hora'>
+                    timeCaption='Hora'
+                    timeIntervals={60}>
                 </DatePicker>
                 </div>
             </div>
