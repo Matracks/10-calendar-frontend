@@ -1,5 +1,4 @@
 import axios from "axios";
-import { getEnvVariables } from "../helpers/getEnvVariables";
 
 const calendarApi = axios.create({
     baseURL: import.meta.env.VITE_API_URL
